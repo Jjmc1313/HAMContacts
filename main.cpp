@@ -1,10 +1,13 @@
 #include <conio.h>
+#include <windows.h>
+#include <cwchar>
 
 #include "classes\CSV.hpp"
 
 void input(auto&);
 void addContact(CSV&);
 void lookupContact(CSV&);
+void editContact(CSV&);
 void displayHelpInfo();
 
 int main() {
@@ -40,7 +43,7 @@ int main() {
             break;
 
         case '3':
-            std::cout << "test";
+            editContact(csvLogFile);
             break;
 
         case '0':
@@ -116,6 +119,28 @@ void lookupContact(CSV& csv) {
     std::cout << tempCall << " has been contacted " << csv.lookupCallsign(tempCall) << " times." << std::endl
               << "Last contacted on " << csv.lastContact(tempCall) << std::endl
               << "Press Any Key To Continue...";
+    getch();
+}
+
+void editContact(CSV& csv) {
+    std::string tempCall;
+
+    std::cout << "\nEnter Callsign: ";
+    input(tempCall);
+
+    std::cout << "(c) Edit Callsign" << std::endl
+              << "(n) Edit Name" << std::endl;
+    switch (getch())
+    {
+    case 'c':
+        csv.editContact(tempCall, 'c');
+        break;
+    case 'n':
+        csv.editContact(tempCall, 'n');
+        break;
+    default:
+        break;
+    }
     getch();
 }
 

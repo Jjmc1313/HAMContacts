@@ -17,6 +17,7 @@ public:
     void logCallsign(std::string, std::string);
     int lookupCallsign(std::string);
     std::string lastContact(std::string);
+    void editContact(std::string, char);
 };
 
 // Default Constructor
@@ -50,13 +51,13 @@ void CSV::logCallsign(std::string callsign, std::string name) {
 }
 
 int CSV::lookupCallsign(std::string callsign) {
-    std::regex pattern(callsign + ".+");
+    std::regex callsignPattern(callsign + ".+");
     std::string temp;
     int contacts = 0;
     
     logFile.open(filename, std::ios::in);
     while (std::getline(logFile, temp)) {
-        if (std::regex_match(temp, pattern)) {
+        if (std::regex_match(temp, callsignPattern)) {
             contacts++;
         }
     }
@@ -66,7 +67,7 @@ int CSV::lookupCallsign(std::string callsign) {
 }
 
 std::string CSV::lastContact(std::string callsign) {
-    std::regex pattern(callsign + ".+");
+    std::regex callsignPattern(callsign + ".+");
     std::regex timestampPattern(", \\d+");
     std::smatch match;
 
@@ -75,7 +76,7 @@ std::string CSV::lastContact(std::string callsign) {
 
     logFile.open(filename, std::ios::in);
     while (std::getline(logFile, temp)) {
-        if (std::regex_match(temp, pattern)) {
+        if (std::regex_match(temp, callsignPattern)) {
             if (std::regex_search(temp, match, timestampPattern)) {
                 hit = true;
             }
@@ -86,6 +87,20 @@ std::string CSV::lastContact(std::string callsign) {
     if (hit) {
         return match.str();
     } else {
-        return "N/A";
+        return "NO CONTACTS";
+    }
+}
+
+void CSV::editContact(std::string callsign, char option) {
+    std::regex callsignPattern(callsign + ".+");
+    
+    std::string temp;
+
+    if (option == 'c') {
+        std::cout << "Enter New Callsign: ";
+        // replace callsign of each line
+    } else if (option == 'n') {
+        std::cout << "Enter New Name: ";
+        // replace name of each line with 
     }
 }

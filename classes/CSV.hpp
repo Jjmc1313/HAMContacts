@@ -19,6 +19,7 @@ public:
     void logCallsign(std::string, std::string);
     int lookupCallsign(std::string);
     std::string lastContact(std::string);
+    void editContact(std::string, char);
 };
 
 #endif
