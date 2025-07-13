@@ -67,7 +67,7 @@ int CSV::lookupCallsign(std::string callsign) {
 
 std::string CSV::lastContact(std::string callsign) {
     std::regex pattern(callsign + ".+");
-    std::regex timestampPattern("\\d{2,10}");
+    std::regex timestampPattern(", \\d+");
     std::smatch match;
 
     std::string temp;
