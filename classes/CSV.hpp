@@ -3,6 +3,7 @@
 #define CSV_HPP_
 
 #include <iostream>
+#include <cstdio>
 #include <fstream>
 #include <limits>
 #include <chrono>
@@ -19,7 +20,7 @@ public:
     void logCallsign(std::string, std::string);
     int lookupCallsign(std::string);
     std::string lastContact(std::string);
-    void editContact(std::string, char);
+    void editContact(std::string, char, std::string);
 };
 
 #endif

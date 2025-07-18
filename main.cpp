@@ -1,10 +1,10 @@
 #include <conio.h>
-#include <bits/stdc++.h>
 
 #include "classes\CSV.hpp"
 
-void input(auto&);
 void toUpper(std::string&);
+void input(auto&);
+
 void addContact(CSV&);
 void lookupContact(CSV&);
 void editContact(CSV&);
@@ -64,6 +64,14 @@ int main() {
     return 0;
 }
 
+// -----------------------------------------------------------------------------------------
+
+void toUpper(std::string& s) {
+    for (char& c : s) {
+        c = toupper(c);
+    }
+}
+
 void input(auto& targetVariable) {
     bool validInput = false;
 
@@ -81,11 +89,7 @@ void input(auto& targetVariable) {
     }
 }
 
-void toUpper(std::string& s) {
-    for (char& c : s) {
-        c = toupper(c);
-    }
-}
+// -----------------------------------------------------------------------------------------
 
 // Need to check if callsign already added, if so default name to existing log entry
 void addContact(CSV& csv) {
@@ -113,7 +117,6 @@ void addContact(CSV& csv) {
     getch();
 }
 
-// Need to add a last contact on function
 void lookupContact(CSV& csv) {
     std::string tempCall;
 
@@ -129,6 +132,7 @@ void lookupContact(CSV& csv) {
 
 void editContact(CSV& csv) {
     std::string tempCall;
+    std::string newData;
 
     std::cout << "\nEnter Callsign: ";
     input(tempCall);
@@ -139,14 +143,22 @@ void editContact(CSV& csv) {
     switch (getch())
     {
     case 'c':
-        csv.editContact(tempCall, 'c');
+        std::cout << "Enter New Callsign: ";
+        input(newData);
+        toUpper(newData);
+        csv.editContact(tempCall, 'c', newData);
         break;
     case 'n':
-        csv.editContact(tempCall, 'n');
+        std::cout << "Enter New Name: ";
+        input(newData);
+        csv.editContact(tempCall, 'n', newData);
         break;
     default:
         break;
     }
+
+    std::cout << "Callsign updated!" << std::endl
+              << "Press Any Key To Continue...";
     getch();
 }
 

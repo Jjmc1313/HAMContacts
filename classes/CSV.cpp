@@ -1,5 +1,6 @@
 // CSV.HPP
 #include <iostream>
+#include <cstdio>
 #include <fstream>
 #include <limits>
 #include <chrono>
@@ -17,7 +18,7 @@ public:
     void logCallsign(std::string, std::string);
     int lookupCallsign(std::string);
     std::string lastContact(std::string);
-    void editContact(std::string, char);
+    void editContact(std::string, char, std::string);
 };
 
 // Default Constructor
@@ -51,7 +52,7 @@ void CSV::logCallsign(std::string callsign, std::string name) {
 }
 
 int CSV::lookupCallsign(std::string callsign) {
-    std::regex callsignPattern(callsign + ".+");
+    std::regex callsignPattern(callsign + ",.+");
     std::string temp;
     int contacts = 0;
     
@@ -67,8 +68,8 @@ int CSV::lookupCallsign(std::string callsign) {
 }
 
 std::string CSV::lastContact(std::string callsign) {
-    std::regex callsignPattern(callsign + ".+");
-    std::regex timestampPattern(", \\d+");
+    std::regex callsignPattern(callsign + ", .+");
+    std::regex timestampPattern(", \\d{2,}");
     std::smatch match;
 
     std::string temp;
@@ -84,23 +85,53 @@ std::string CSV::lastContact(std::string callsign) {
     }
     logFile.close();
 
+    temp = match.str();
+    temp = std::regex_replace(temp, std::regex(" "), "");
+    temp = std::regex_replace(temp, std::regex(","), "");
+
     if (hit) {
-        return match.str();
+        return temp;
     } else {
         return "NO CONTACTS";
     }
 }
 
-void CSV::editContact(std::string callsign, char option) {
-    std::regex callsignPattern(callsign + ".+");
+void CSV::editContact(std::string callsign, char option, std::string newData) {
+    std::regex callsignPattern(callsign + ",.+");
+    std::ofstream tempOutput("log.csv.temp");
     
     std::string temp;
 
+    logFile.open(filename, std::ios::in);
     if (option == 'c') {
-        std::cout << "Enter New Callsign: ";
-        // replace callsign of each line
+        while (std::getline(logFile, temp)) {
+            if (std::regex_match(temp, callsignPattern)) {
+                tempOutput << std::regex_replace(temp, std::regex(callsign), newData) << std::endl;
+            } else {
+                tempOutput << temp << std::endl;
+            }
+        }
     } else if (option == 'n') {
-        std::cout << "Enter New Name: ";
-        // replace name of each line with 
+        while (std::getline(logFile, temp)) {
+            if (std::regex_match(temp, callsignPattern)) {
+                tempOutput << std::regex_replace(temp, std::regex("\\S+$"), newData) << std::endl;
+            } else {
+                tempOutput << temp << std::endl;
+            }
+        }
     }
+    tempOutput.close();
+    logFile.close();
+
+    logFile.open(filename, std::ios::out | std::ios::trunc);
+    std::ifstream tempLog("log.csv.temp");
+    while (std::getline(tempLog, temp)) {
+        logFile << temp << std::endl;
+    }
+    logFile.close();
+    tempLog.close();
+    tempOutput.open("log.csv.temp");
+    tempOutput.clear();
+    tempOutput << "!!! THIS IS NOT YOUR LOG FILE, THIS IS A TEMPORARY FILE !!!" << std::endl;
+    tempOutput.close();
 }
