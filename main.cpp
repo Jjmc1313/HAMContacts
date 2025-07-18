@@ -1,10 +1,10 @@
 #include <conio.h>
-#include <windows.h>
-#include <cwchar>
+#include <bits/stdc++.h>
 
 #include "classes\CSV.hpp"
 
 void input(auto&);
+void toUpper(std::string&);
 void addContact(CSV&);
 void lookupContact(CSV&);
 void editContact(CSV&);
@@ -28,9 +28,6 @@ int main() {
                   << "(4) Remove Contact\n" << std::endl
                   << "(0) Information" << std::endl
                   << "(q) Quit" << std::endl;
-        
-        std::string tempCall;
-        std::string tempName;
 
         switch (getch())
         {
@@ -84,6 +81,12 @@ void input(auto& targetVariable) {
     }
 }
 
+void toUpper(std::string& s) {
+    for (char& c : s) {
+        c = toupper(c);
+    }
+}
+
 // Need to check if callsign already added, if so default name to existing log entry
 void addContact(CSV& csv) {
     bool validInput = false;
@@ -93,6 +96,7 @@ void addContact(CSV& csv) {
     do {
         std::cout << "\nEnter Callsign: ";
         input(tempCall);
+        toUpper(tempCall);
         std::cout << "Enter Name: ";
         input(tempName);
 
@@ -115,6 +119,7 @@ void lookupContact(CSV& csv) {
 
     std::cout << "\nEnter Callsign: ";
     input(tempCall);
+    toUpper(tempCall);
 
     std::cout << tempCall << " has been contacted " << csv.lookupCallsign(tempCall) << " times." << std::endl
               << "Last contacted on " << csv.lastContact(tempCall) << std::endl
@@ -127,6 +132,7 @@ void editContact(CSV& csv) {
 
     std::cout << "\nEnter Callsign: ";
     input(tempCall);
+    toUpper(tempCall);
 
     std::cout << "(c) Edit Callsign" << std::endl
               << "(n) Edit Name" << std::endl;
