@@ -5,6 +5,7 @@
 #include <limits>
 #include <chrono>
 #include <regex>
+#include <conio.h>
 
 const auto p1 = std::chrono::system_clock::now();
 
@@ -19,13 +20,14 @@ public:
     int lookupCallsign(std::string);
     std::string lastContact(std::string);
     void editContact(std::string, char, std::string);
+    void outputLog();
 };
 
 // Default Constructor
 CSV::CSV(std::string name) {
     /*
     Since the header is located at the top of the file,
-    I had to open it with ios::in | ios::out, that way I 
+    open it with ios::in | ios::out, that way I 
     didn't need to seek to the beginning, by defaulting to
     that above though, the file would not be created if it
     was missing, so I create it if there is no open file, 
@@ -85,15 +87,13 @@ std::string CSV::lastContact(std::string callsign) {
     }
     logFile.close();
 
-    temp = match.str();
-    temp = std::regex_replace(temp, std::regex(" "), "");
-    temp = std::regex_replace(temp, std::regex(","), "");
+    std::string output = "N/A";
 
-    if (hit) {
-        return temp;
-    } else {
-        return "NO CONTACTS";
-    }
+    output = match.str();
+    output = std::regex_replace(output, std::regex(" "), "");
+    output = std::regex_replace(output, std::regex(","), "");
+
+    return output;
 }
 
 void CSV::editContact(std::string callsign, char option, std::string newData) {
@@ -134,4 +134,33 @@ void CSV::editContact(std::string callsign, char option, std::string newData) {
     tempOutput.clear();
     tempOutput << "!!! THIS IS NOT YOUR LOG FILE, THIS IS A TEMPORARY FILE !!!" << std::endl;
     tempOutput.close();
+}
+
+void CSV::outputLog() {
+    logFile.open(filename, std::ios::in);
+
+    std::string temp;
+
+    unsigned int i = 0;
+    while (std::getline(logFile, temp)) {
+        if (i > 0) {
+            std::cout << temp << std::endl;
+        }
+        if (i != 0 && i % 5 == 0) {
+            std::cout << "Press Space To Continue...";
+            switch (getch())
+            {
+            case ' ':
+                std::cout << "\33[2K\r";
+                break;
+
+            default:
+                return;
+            }
+        }
+
+        i++;
+    }
+
+    logFile.close();
 }

@@ -8,6 +8,7 @@
 #include <limits>
 #include <chrono>
 #include <regex>
+#include <conio.h>
 
 const auto p1 = std::chrono::system_clock::now();
 
@@ -21,6 +22,7 @@ public:
     int lookupCallsign(std::string);
     std::string lastContact(std::string);
     void editContact(std::string, char, std::string);
+    void outputLog();
 };
 
 #endif

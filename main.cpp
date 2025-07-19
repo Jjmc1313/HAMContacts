@@ -8,6 +8,7 @@ void input(auto&);
 void addContact(CSV&);
 void lookupContact(CSV&);
 void editContact(CSV&);
+void outputLog(CSV&);
 void displayHelpInfo();
 
 int main() {
@@ -22,12 +23,13 @@ int main() {
                   << "┣┫┣┫┃┃┃  ┃ ┏┓┃┓  ┃ ┃┫" << std::endl
                   << "┛┗┛┗┛ ┗  ┗┛┗┛┗┛  ┻•┗┛" << std::endl
                   << "¯¯¯¯¯PRESS A KEY¯¯¯¯¯" << std::endl;
-        std::cout << "(1) Add Contact" << std::endl
-                  << "(2) Recall Contact" << std::endl
-                  << "(3) Update Contact" << std::endl
-                  << "(4) Remove Contact\n" << std::endl
-                  << "(0) Information" << std::endl
-                  << "(q) Quit" << std::endl;
+        std::cout << "(1) Add Contact"       << std::endl
+                  << "(2) Recall Contact"    << std::endl
+                  << "(3) Update Contact"    << std::endl
+                  << "(4) Output Log"        << std::endl
+                  << "(5) Remove Contact\n"  << std::endl // incomplete
+                  << "(0) Information"       << std::endl
+                  << "(q) Quit"              << std::endl;
 
         switch (getch())
         {
@@ -41,6 +43,10 @@ int main() {
 
         case '3':
             editContact(csvLogFile);
+            break;
+
+        case '4':
+            outputLog(csvLogFile);
             break;
 
         case '0':
@@ -158,6 +164,15 @@ void editContact(CSV& csv) {
     }
 
     std::cout << "Callsign updated!" << std::endl
+              << "Press Any Key To Continue...";
+    getch();
+}
+
+void outputLog(CSV& csv) {
+    std::cout << std::endl;
+    std::cout << "- START OF LOG -";
+    csv.outputLog();
+    std::cout << "- END OF LOG -" << std::endl
               << "Press Any Key To Continue...";
     getch();
 }
